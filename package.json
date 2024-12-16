@@ -1,0 +1,66 @@
+{
+  "name": "lamed-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-amplify/api": "^6.0.56",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.1.7",
+    "@mui/material": "^6.2.0",
+    "@mui/material-next": "^6.0.0-alpha.126",
+    "@mui/x-date-pickers": "^7.22.2",
+    "@mui/x-date-pickers-pro": "^7.23.1",
+    "@schedule-x/events-service": "^2.5.0",
+    "@schedule-x/react": "^2.4.2",
+    "@schedule-x/theme-default": "^2.5.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.114",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "aws-amplify": "^6.6.7",
+    "aws-sdk": "^2.1691.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
+    "font-awesome": "^4.7.0",
+    "http-server": "^14.1.1",
+    "react": "^18.3.1",
+    "react-date-picker": "^11.0.0",
+    "react-datepicker": "^7.5.0",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1",
+    "react-time-picker": "^7.0.0",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "react-router-dom": "^6.28.0"
+  }
+}
