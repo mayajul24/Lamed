@@ -1,4 +1,4 @@
-# LamedLamed is a web application designed to simplify the process of finding and connecting with driving teachers. Students can easily search for instructors, communicate with them, and schedule driving lessons, all within one seamless platform.
+# Lamed is a web application designed to simplify the process of finding and connecting with driving teachers. Students can easily search for instructors, communicate with them, and schedule driving lessons, all within one seamless platform.
 
 Tech Stack: Built using React for the frontend, and AWS services including AWS Lambda and DynamoDB for serverless computing and data storage.
 Project Status: Currently in progress.
