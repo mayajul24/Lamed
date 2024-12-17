@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import mylogo from './pictures/mylogo.png';
-import carsBackground from './pictures/cars_background2.jpg';
-import { Avatar, Box, Button, ButtonGroup, Typography } from '@mui/material';
+import { 
+  Avatar, 
+  Box, 
+  Typography, 
+  AppBar, 
+  Tabs, 
+  Tab, 
+  Toolbar, 
+  Container, 
+  Paper 
+} from '@mui/material';
 
 function HomeTeacher() {
   interface Teacher {
@@ -17,92 +26,114 @@ function HomeTeacher() {
   const location = useLocation();
   const { teacher } = location.state;
   const navigate = useNavigate();
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  function handleRequests(){
+  function handleTabChange(event: React.SyntheticEvent, newValue: number) {
+    setSelectedTab(newValue);
     const username = teacher.username;
-    console.log("username in welcome " + username);
-    navigate('/requests', { state: { username } });
-  };
 
-  function handleStudents(){
-    const username = teacher.username;
-    console.log("button clicked");
-    navigate('/students', { state: { username } });
-  };
-
-  function handleLessons() {
-    const username = teacher.username;
-    console.log("button clicked");
-    navigate('/lessons', { state: { username } });
-  };
-  function handleSlots()
-  {
-    const username = teacher.username;
-    navigate('/slots', { state: { username } });
+    switch (newValue) {
+      case 0:
+        navigate('/requests', { state: { username } });
+        break;
+      case 1:
+        navigate('/students', { state: { username } });
+        break;
+      case 2:
+        navigate('/lessons', { state: { username } });
+        break;
+      case 3:
+        navigate('/slots', { state: { username } });
+        break;
+      default:
+        break;
+    }
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        width: '100vw',
-        height: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          borderRadius: 4,
-          boxShadow: 3,
-          padding: 4,
-          width: '100%',
-          maxWidth: '600px',
-          textAlign: 'center',
+    <Box sx={{ 
+      backgroundColor: '#f0f2f5', 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Top Navbar */}
+      <AppBar position="fixed" sx={{ 
+        backgroundColor: '#009688', 
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+      }}>
+        <Toolbar>
+          <img 
+            src={mylogo} 
+            alt="My Logo" 
+            style={{ 
+              height: '40px', 
+              marginRight: '16px' 
+            }} 
+          />
+          <Tabs
+            value={selectedTab}
+            onChange={handleTabChange}
+            aria-label="teacher navigation"
+            sx={{ 
+              width: '100%', 
+              justifyContent: 'center',
+              '& .MuiTabs-indicator': {
+              backgroundColor: 'transparent' // Remove the indicator completely
+            }
+            }}
+            textColor="inherit"
+            indicatorColor="secondary"
+          >
+            <Tab label="בקשות" sx={{ color: 'black' }} />
+            <Tab label="תלמידים" sx={{ color: 'black' }} />
+            <Tab label="שיעורים" sx={{ color: 'black' }} />
+            <Tab label="קביעת זמנים" sx={{ color: 'black' }} />
+          </Tabs>
+        </Toolbar>
+      </AppBar>
+
+      {/* Main Content */}
+      <Container 
+        sx={{ 
+          mt: '80px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center' 
         }}
       >
-      <img
-        src={mylogo}
-        alt="My Logo"
-        style={{
-          marginBottom: '20px',
-          display: 'block',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}
-      />
-      <Typography variant="h5" fontSize="32px" fontFamily="Roboto" dir="rtl" sx={{ mb: 2 }}>
-        שלום, {teacher.firstName}
-      </Typography>
-      <Avatar
-        src={teacher.profilePicture || '/path/to/default/image.jpg'}
-        alt={`${teacher.firstName} ${teacher.lastName}`}
-        sx={{ width: 100, height: 100, margin: 'auto', mb: 4 }}
-      />
-        <ButtonGroup
-          orientation="vertical"
-          variant="contained"
-          color="primary"
-          sx={{
-            width: '100%',
-            '& .MuiButton-root': {
-              fontSize: '16px',
-              py: 1.5,
-            },
-            gap: 2,
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: 4, 
+            width: '100%', 
+            maxWidth: '500px', 
+            textAlign: 'center', 
+            backgroundColor: 'white' 
           }}
         >
-          <Button onClick={handleRequests}>בקשות</Button>
-          <Button onClick={handleStudents}>תלמידים</Button>
-          <Button onClick={handleLessons}>שיעורים</Button>
-          <Button onClick={handleSlots}>קביעת זמנים</Button>
-
-        </ButtonGroup>
-      </Box>
+          <Typography 
+            variant="h5" 
+            fontSize="32px" 
+            fontFamily="Roboto" 
+            dir="rtl" 
+            sx={{ mb: 2 }}
+          >
+            שלום, {teacher.firstName}
+          </Typography>
+          
+          <Avatar
+            src={teacher.profilePicture || '/path/to/default/image.jpg'}
+            alt={`${teacher.firstName} ${teacher.lastName}`}
+            sx={{ 
+              width: 100, 
+              height: 100, 
+              margin: 'auto', 
+              mb: 4 
+            }}
+          />
+        </Paper>
+      </Container>
     </Box>
   );
 }

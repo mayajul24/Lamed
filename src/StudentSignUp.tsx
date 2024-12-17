@@ -5,13 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import mylogo from './pictures/mylogo.png';
 import carsBackground from './pictures/cars_background2.jpg';
-import dotenv from 'dotenv';
 
 export default function StudentSignUp() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
-  dotenv.config();
 
   AWS.config.update({
     accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,

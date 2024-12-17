@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import carsBackground from './pictures/cars_background2.jpg';
-import {List,ListItem,ListItemText,ListItemAvatar,Avatar,Button,Divider,Box,Typography,} from '@mui/material';
+import {List,ListItem,ListItemText,ListItemAvatar,Avatar,Button,Divider,Box,Typography,Toolbar,AppBar,Container,Tabs,Tab,Paper} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
+import { useNavigate } from 'react-router-dom';
 
 function Lessons() {
   const location = useLocation();
@@ -11,7 +12,9 @@ function Lessons() {
   const [requests, setRequests] = useState<LessonRequest[]>([]);
   const teacherUsername = username;
   const [isLoading, setIsLoading] = useState(true);
-
+  const [selectedTab, setSelectedTab] = useState(1); // Default to the "Students" tab
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const getStudentRequests = async () => {
       const apiUrl = process.env.REACT_APP_GET_LESSONS_URL!;
@@ -53,6 +56,25 @@ function Lessons() {
     username:string
     profilePicture:string;
   }
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+      setSelectedTab(newValue);
+      switch (newValue) {
+        case 0:
+          navigate('/requests', { state: { username } });
+          break;
+        case 1:
+          navigate('/students', { state: { username } });
+          break;
+        case 2:
+          navigate('/lessons', { state: { username } });
+          break;
+        case 3:
+          navigate('/slots', { state: { username } });
+          break;
+        default:
+          break;
+      }
+    };
 
   return (
     <Box

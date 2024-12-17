@@ -3,16 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import background from "./pictures/background3.png";
 import mylogo from "./pictures/mylogo.png";
-import {
-  Avatar,
-  Button,
-  TextField,
-  Link,
-  Grid,
-  Box,
-  Container,
-  Typography,
-} from "@mui/material";
+import {Avatar,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
 
 export default function SignIn() {
   const location = useLocation();
@@ -24,6 +15,7 @@ export default function SignIn() {
     const username = data.get("username");
     const password = data.get("password");
     const apiUrl = process.env.REACT_APP_LOGIN!;
+    console.log("api "+apiUrl);
     const user_data = {
       username,
       password,
@@ -154,10 +146,7 @@ export default function SignIn() {
           color: "#fff",
           fontWeight: 600,
           padding: "10px 0",
-          borderRadius: 2,
-          "&:hover": {
-            background: "linear-gradient(90deg, #5E35B1, #7B1FA2)",
-          },
+          borderRadius: 2
         }}
       >
         כניסה
