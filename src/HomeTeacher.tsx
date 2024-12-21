@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import mylogo from './pictures/mylogo.png';
 import { 
   Avatar, 
@@ -9,9 +9,11 @@ import {
   Tabs, 
   Tab, 
   Toolbar, 
-  Container, 
-  Paper 
+  Container 
 } from '@mui/material';
+import Requests from './Requests';
+import Students from './Students';
+import TeacherSlots from './TeacherSlots';
 
 function HomeTeacher() {
   interface Teacher {
@@ -25,115 +27,95 @@ function HomeTeacher() {
 
   const location = useLocation();
   const { teacher } = location.state;
-  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
-  function handleTabChange(event: React.SyntheticEvent, newValue: number) {
-    setSelectedTab(newValue);
-    const username = teacher.username;
-
-    switch (newValue) {
+  const renderTabContent = () => {
+    switch (selectedTab) {
       case 0:
-        navigate('/requests', { state: { username } });
-        break;
+        return <Requests teacherUsername={teacher.username}/>;
       case 1:
-        navigate('/students', { state: { username } });
-        break;
+        return <Students teacherUsername={teacher.username} />;
       case 2:
-        navigate('/lessons', { state: { username } });
-        break;
-      case 3:
-        navigate('/slots', { state: { username } });
-        break;
+        return <TeacherSlots teacherUsername={teacher.username}/>;
       default:
-        break;
+        return null;
     }
-  }
+  };
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
 
   return (
-    <Box sx={{ 
-      backgroundColor: '#f0f2f5', 
-      minHeight: '100vh',
+    <Box
+    sx={{
       display: 'flex',
-      flexDirection: 'column'
-    }}>
+      flexDirection: 'column',
+      height: '100vh', 
+      width: '100vw',
+      overflow: 'hidden',
+      backgroundColor: '#f0f2f5',
+    }}
+    >
       {/* Top Navbar */}
-      <AppBar position="fixed" sx={{ 
-        backgroundColor: '#009688', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
-      }}>
-        <Toolbar>
-          <img 
-            src={mylogo} 
-            alt="My Logo" 
-            style={{ 
-              height: '40px', 
-              marginRight: '16px' 
-            }} 
-          />
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          backgroundColor: '#009688', 
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          {/* Logo and Greeting */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img 
+              src={mylogo} 
+              alt="My Logo" 
+              style={{ height: '40px', marginRight: '16px' }} 
+            />
+            <Typography 
+              variant="h6" 
+              fontFamily="Arial" 
+              dir="rtl" 
+              sx={{ color: 'white' }}
+            >
+              שלום, {teacher.firstName}
+            </Typography>
+          </Box>
+
+          {/* Tabs */}
           <Tabs
             value={selectedTab}
             onChange={handleTabChange}
             aria-label="teacher navigation"
-            sx={{ 
-              width: '100%', 
-              justifyContent: 'center',
-              '& .MuiTabs-indicator': {
-              backgroundColor: 'transparent' // Remove the indicator completely
-            }
-            }}
             textColor="inherit"
             indicatorColor="secondary"
+            centered
+            sx={{
+              '& .MuiTabs-indicator': {
+                backgroundColor: 'transparent', // Remove indicator
+              },
+            }}
           >
-            <Tab label="בקשות" sx={{ color: 'black' }} />
-            <Tab label="תלמידים" sx={{ color: 'black' }} />
-            <Tab label="שיעורים" sx={{ color: 'black' }} />
-            <Tab label="קביעת זמנים" sx={{ color: 'black' }} />
+            <Tab label="בקשות" sx={{ color: 'white' }} />
+            <Tab label="תלמידים" sx={{ color: 'white' }} />
+            <Tab label="קביעת זמנים" sx={{ color: 'white' }} />
           </Tabs>
         </Toolbar>
       </AppBar>
 
       {/* Main Content */}
-      <Container 
-        sx={{ 
-          mt: '80px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center' 
+      <Box
+        sx={{
+          width: '100%',
+          mt: 12,  
+          flex: 1,  
+          paddingBottom: '20px', 
         }}
       >
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: 4, 
-            width: '100%', 
-            maxWidth: '500px', 
-            textAlign: 'center', 
-            backgroundColor: 'white' 
-          }}
-        >
-          <Typography 
-            variant="h5" 
-            fontSize="32px" 
-            fontFamily="Roboto" 
-            dir="rtl" 
-            sx={{ mb: 2 }}
-          >
-            שלום, {teacher.firstName}
-          </Typography>
-          
-          <Avatar
-            src={teacher.profilePicture || '/path/to/default/image.jpg'}
-            alt={`${teacher.firstName} ${teacher.lastName}`}
-            sx={{ 
-              width: 100, 
-              height: 100, 
-              margin: 'auto', 
-              mb: 4 
-            }}
-          />
-        </Paper>
-      </Container>
+        {/* Render Tab Content */}
+        {renderTabContent()}
+      </Box>
     </Box>
   );
 }

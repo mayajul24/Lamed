@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import mylogo from './pictures/mylogo.png';
 import {List,ListItem,ListItemText,ListItemAvatar,Avatar,Button,Divider,Box,Typography,Toolbar,AppBar,Container,Tabs,Tab,Paper} from '@mui/material';
-function Students()
+
+interface StudentsProps {
+  teacherUsername:string;
+}
+function Students({teacherUsername}:StudentsProps)
 {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const {username} = location.state;
   const [students, setStudents] = useState<Student[]>([]);
-  const teacherUsername = username;
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(1); // Default to the "Students" tab
 
@@ -70,75 +70,11 @@ function Students()
         username: string;
         profilePicture?: string;
       }
-      const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setSelectedTab(newValue);
-    
-        switch (newValue) {
-          case 0:
-            navigate('/requests', { state: { username } });
-            break;
-          case 1:
-            navigate('/students', { state: { username } });
-            break;
-          case 2:
-            navigate('/lessons', { state: { username } });
-            break;
-          case 3:
-            navigate('/slots', { state: { username } });
-            break;
-          default:
-            break;
-        }
-      };
     
       return (
-        <Box sx={{ backgroundColor: '#f0f2f5', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-          {/* Top Navbar */}
-          <AppBar position="fixed" sx={{ backgroundColor: '#009688', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-            <Toolbar>
-              <img
-                src={mylogo}
-                alt="My Logo"
-                style={{
-                  height: '40px',
-                  marginRight: '16px',
-                }}
-              />
-              <Tabs
-                value={selectedTab}
-                onChange={handleTabChange}
-                aria-label="teacher navigation"
-                sx={{
-                  width: '100%',
-                  justifyContent: 'center',
-                  '& .MuiTabs-indicator': {
-                    backgroundColor: 'transparent',
-                  },
-                }}
-                textColor="inherit"
-                indicatorColor="secondary"
-              >
-                <Tab label="בקשות" sx={{ color: 'black' }} />
-                <Tab label="תלמידים" sx={{ color: 'black' }} />
-                <Tab label="שיעורים" sx={{ color: 'black' }} />
-                <Tab label="קביעת זמנים" sx={{ color: 'black' }} />
-              </Tabs>
-            </Toolbar>
-          </AppBar>
-    
-          {/* Main Content */}
-          <Container sx={{ mt: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Paper
-              elevation={3}
-              sx={{
-                p: 4,
-                width: '100%',
-                maxWidth: '500px',
-                textAlign: 'center',
-                backgroundColor: 'white',
-              }}
-            >
-              <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#00796b', fontSize: '2rem' }}>
+            <Container sx={{ mt: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        
+                <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#00796b', fontSize: '2rem' }}>
                 תלמידים
               </Typography>
               {isLoading ? (
@@ -191,12 +127,10 @@ function Students()
                 </List>
               ) : (
                 <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '20px' }}>
-                  No Students
+                  אין תלמידים
                 </Typography>
               )}
-            </Paper>
           </Container>
-        </Box>
       );
 }
 

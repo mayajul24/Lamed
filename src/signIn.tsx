@@ -3,19 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import background from "./pictures/background3.png";
 import mylogo from "./pictures/mylogo.png";
-import {Avatar,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
+import {Avatar,ButtonGroup,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
 
 export default function SignIn() {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [showWelcomePage, setShowWelcomePage] = React.useState(false);
+  
+  
+    const handleLogin = (userType: string) => {
+      if (userType === 'student') {
+        navigate('/student-sign-up', { state: userType });
+      } else {
+        navigate('/teacher-sign-up', { state: userType });
+      }
+    };
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
     const apiUrl = process.env.REACT_APP_LOGIN!;
-    console.log("api "+apiUrl);
     const user_data = {
       username,
       password,
@@ -60,48 +68,15 @@ export default function SignIn() {
   }
 
   return (
-    <Box
-      sx={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        opacity: 0.5, 
-      }}
-    >
-      
-    <Container
-      component="main"
-      dir="rtl"
-      maxWidth="xs"
-      sx={{
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
-        padding: 4,
-        borderRadius: 4,
-        boxShadow: 3,
-      }}
-    >
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        mb: 3,
-      }}
-    >
-    <img src={mylogo} alt="Logo" style={{ height: 50 }} />
-    </Box>
+    <>
+      <img src={mylogo} alt="Logo" style={{ height: 50 }} />
     <Typography
       component="h1"
       variant="h5"
       align="center"
       sx={{ fontWeight: 600, mb: 2 }}
     >
-      כניסה
+      התחברות
     </Typography>
     <Box component="form" onSubmit={handleSubmit} noValidate>
       <TextField
@@ -146,28 +121,15 @@ export default function SignIn() {
           color: "#fff",
           fontWeight: 600,
           padding: "10px 0",
-          borderRadius: 2
+          borderRadius: 2,
         }}
       >
         כניסה
       </Button>
-      <Grid container justifyContent="center">
-        <Grid item>
-          <Link
-            href="#"
-            variant="body2"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/welcome-page");
-            }}
-            sx={{ color: "#009688", fontWeight: 500 }}
-          >
-            אין לך עדיין משתמש?
-          </Link>
-        </Grid>
-      </Grid>
-    </Box>
-  </Container>
-  </Box>
-  );
+      
+    </Box></>)
 }
+
+
+
+

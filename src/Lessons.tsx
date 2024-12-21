@@ -5,6 +5,7 @@ import {List,ListItem,ListItemText,ListItemAvatar,Avatar,Button,Divider,Box,Typo
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import { useNavigate } from 'react-router-dom';
+import mylogo from './pictures/mylogo.png';
 
 function Lessons() {
   const location = useLocation();
@@ -56,58 +57,20 @@ function Lessons() {
     username:string
     profilePicture:string;
   }
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-      setSelectedTab(newValue);
-      switch (newValue) {
-        case 0:
-          navigate('/requests', { state: { username } });
-          break;
-        case 1:
-          navigate('/students', { state: { username } });
-          break;
-        case 2:
-          navigate('/lessons', { state: { username } });
-          break;
-        case 3:
-          navigate('/slots', { state: { username } });
-          break;
-        default:
-          break;
-      }
-    };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        width: '100vw',
-        height: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          borderRadius: 4,
-          boxShadow: 3,
-          padding: 4,
-          width: '100%',
-          maxWidth: '600px',
-          textAlign: 'center',
-        }}
-      >
+    <Box sx={{ backgroundColor: '#f0f2f5',height: "50vh",width:"100vh", display: 'flex', flexDirection: 'column' }}>
+      <Container sx={{ mt: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
         <Typography variant="h5" fontSize="32px" fontFamily="Roboto" dir="rtl" sx={{ mb: 2 }}>
-שיעורים        </Typography>
+          שיעורים        
+        </Typography>
         {isLoading ? (
           <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '20px' }}>
             Loading...
           </Typography>
         ) : requests.length > 0 ? (
-          <List sx={{ bgcolor: 'background.paper', borderRadius: 1, boxShadow: 2, padding: '20px' }}>
+          <List sx={{ bgcolor: 'background.paper', borderRadius: 1, padding: '20px' }}>
             {requests.map((request) => (
               <React.Fragment key={request.username}>
                 <ListItem
@@ -120,31 +83,31 @@ function Lessons() {
                     direction: 'rtl',
                   }}
                 >
-                  <ListItemAvatar>
-                    <Avatar
-                      src={request.profilePicture || '/path/to/default/image.jpg'}
-                      alt={`${request.firstName} ${request.lastName}`}
-                      sx={{ width: 70, height: 70, mx: 3 }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    dir="rtl"
-                    primary={
-                        <Typography variant="h6" sx={{ fontSize: '24px' }}>
-                          {request.firstName} {request.lastName}
-                        </Typography>
-                      }
-                      secondary={
-                        <>
-                          <Typography variant="body2" sx={{ fontSize: '20px' }}>
-                            תאריך {request.date}
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontSize: '20px' }}>
-                            שעה {request.time}
-                          </Typography>
-                        </>
-                      }
+                <ListItemAvatar>
+                  <Avatar
+                    src={request.profilePicture || '/path/to/default/image.jpg'}
+                    alt={`${request.firstName} ${request.lastName}`}
+                    sx={{ width: 70, height: 70, mx: 3 }}
                   />
+                </ListItemAvatar>
+                <ListItemText
+                  dir="rtl"
+                  primary={
+                      <Typography variant="h6" sx={{ fontSize: '24px' }}>
+                        {request.firstName} {request.lastName}
+                      </Typography>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="body2" sx={{ fontSize: '20px' }}>
+                          תאריך {request.date}
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontSize: '20px' }}>
+                          שעה {request.time}
+                        </Typography>
+                      </>
+                    }
+                />
                 </ListItem>
                 <Divider component="li" />
               </React.Fragment>
@@ -155,7 +118,7 @@ function Lessons() {
             אין
           </Typography>
         )}
-      </Box>
+      </Container>
     </Box>
  
   );

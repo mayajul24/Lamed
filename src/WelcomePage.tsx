@@ -1,83 +1,121 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {Button,Box,ButtonGroup,Avatar,Typography} from '@mui/material';
-import mylogo from './pictures/mylogo.png';
-import carsBackground from './pictures/cars_background2.jpg';
-import Container from '@mui/material/Container';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import background from "./pictures/background3.png";
+import mylogo from "./pictures/mylogo.png";
+import {Avatar,ButtonGroup,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
 
-function WelcomePage() {
+export default function SignIn() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [showWelcomePage, setShowWelcomePage] = React.useState(false);
+  
+  
+    const handleLogin = (userType: string) => {
+      if (userType === 'student') {
+        navigate('/student-sign-up', { state: userType });
+      } else {
+        navigate('/teacher-sign-up', { state: userType });
+      }
+    };
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const username = data.get("username");
+    const password = data.get("password");
+    const apiUrl = process.env.REACT_APP_LOGIN!;
+    const user_data = {
+      username,
+      password,
+    };
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user_data),
+      });
 
-  const handleLogin = (userType: string) => {
-    if (userType === 'student') {
-      navigate('/student-sign-up', { state: userType });
-    } else {
-      navigate('/teacher-sign-up', { state: userType });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Response from Lambda:", data);
+
+      if (data.succeeded) {
+        const user = data.user;
+        const userType = user.userType;
+        if (userType === "teacher") {
+          const teacher = user;
+          navigate("/home-teacher", { state: { teacher } });
+        } else {
+          const student = user;
+          const hasTeacher = student.teacher != null && student.teacher.length > 0;
+          if (hasTeacher) {
+            navigate("/home-student", { state: { student } });
+          } else {
+            navigate("/find_teacher", { state: { student } });
+          }
+        }
+      } else {
+        alert("שם משתמש או סיסמה לא נכונים");
+      }
+    } catch (error) {
+      console.error("Error sending data to Lambda:", error);
     }
-  };
+  }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        width: '100vw',
-        height: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+    <>
+    <img src={mylogo} alt="Logo" style={{ height: 50 }} />
+    <Typography
+      component="h1"
+      variant="h5"
+      align="center"
+      sx={{ fontWeight: 600, mb: 2 }}
     >
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          borderRadius: 4,
-          boxShadow: 3,
-          padding: 4,
-          width: '100%',
-          maxWidth: '600px',
-          textAlign: 'center',
-          minHeight: '300px',  
-
-        }}
-      >
-        <img
-          src={mylogo}
-          alt="My Logo"
-          style={{
-            marginBottom: '20px',
-            display: 'block',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        />
-        
-        <ButtonGroup
-  orientation="vertical"
-  variant="outlined"
-  sx={{
-    width: '100%',
-    '& .MuiButton-root': {
-      fontSize: '24px',
-      py: 1.5,
-      borderColor: '#009688',  // Set border color
-      color: '#009688',        // Set text color
-      '&:hover': {
-        borderColor: '#00796b',  // Darker shade for border on hover
-        color: '#00796b',         // Darker text color on hover
-      }
-    },
-    gap: 2,
-  }}
->
-  <Button onClick={() => handleLogin('student')}>אני תלמיד</Button>
-  <Button onClick={() => handleLogin('teacher')}>אני מורה</Button>
-</ButtonGroup>
-
-      </Box>
+      רישום
+    </Typography>
+    <Box component="form" onSubmit={handleSubmit} noValidate>
     </Box>
-  );
-}
+    
+        <div>
+<Button
+        fullWidth
+        variant="contained"
+        sx={{
+          mt: 2,
+          mb: 2,
+          background: "#009688",
+          color: "#fff",
+          fontWeight: 600,
+          padding: "10px 0",
+          borderRadius: 2,
+        }}
+        onClick={() => handleLogin('student')}
+      >
+        אני תלמיד
+      </Button>
+      
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{
+          mt: 2,
+          mb: 2,
+          background: "#009688",
+          color: "#fff",
+          fontWeight: 600,
+          padding: "10px 0",
+          borderRadius: 2,
+        }}
+        onClick={() => handleLogin('teacher')}
+      >
+        אני מורה
+      </Button>
+  </div>
+</>);
 
-export default WelcomePage;
+}

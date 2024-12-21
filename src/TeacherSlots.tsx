@@ -18,12 +18,14 @@ import {
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 
-function TeacherSlots() {
-    const location = useLocation();
-    const { username } = location.state;
-    const teacherUsername = username;
+interface TeacherSlotsProps {
+  teacherUsername: string;
+}
+
+function TeacherSlots({ teacherUsername}:TeacherSlotsProps) {
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-    
+    const [confirmSubmission, setConfirmSubmission] = useState(false);
+
   // Days of the week in Hebrew
   const days = [
     'יום ראשון',
@@ -69,14 +71,18 @@ function TeacherSlots() {
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
-  async function handleSubmit () {
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+  async function handleConfirmSubmission () {
+    setConfirmSubmission(true);
+    handleCloseConfirmDialog(); // Close the dialog after confirmation
     const availableSlots = availability.filter(slot => slot.isAvailable);
     const submissionData: SubmittedAvailability = {
-      teacherUsername: username,
+      teacherUsername: teacherUsername,
       availableSlots: availableSlots
     };
 
-    setOpenConfirmDialog(true);
     console.log('Submitting availability:', submissionData);
     const apiUrl = process.env.REACT_APP_ADD_SLOTS!;
     
@@ -229,7 +235,7 @@ function TeacherSlots() {
         <Button 
           variant="contained" 
           color="primary" 
-          onClick={handleSubmit}
+          onClick={handleOpenConfirmDialog}
         >
           הגש זמינות
         </Button>
@@ -259,11 +265,9 @@ function TeacherSlots() {
             בטל
           </Button>
           <Button 
-            onClick={() => {
-              handleCloseConfirmDialog();
-            }} 
+            onClick={handleConfirmSubmission} 
             color="primary" 
-            autoFocus
+            disabled={confirmSubmission} // Button becomes disabled after the first click
           >
             אשר
           </Button>

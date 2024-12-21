@@ -31,13 +31,16 @@ interface Student {
     profilePicture: string;
 }
 
-function StudentLessonBooking() {
+export default function NewLesson() {
     const [teacherSlots, setTeacherSlots] = useState<TimeSlot[]>([]);
     const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
     const location = useLocation();
+    const [confirmSubmission, setConfirmSubmission] = useState(false);
     const { student } = location.state;
-    
+    const apiUrlAddLesson = process.env.REACT_APP_ADD_LESSON;
+    const apiUrl = process.env.REACT_APP_GET_TEACHER_SLOTS!;
+    console.log("api please "+apiUrl);
     // Days of the week in Hebrew
     const days = [
         'יום ראשון',
@@ -48,8 +51,6 @@ function StudentLessonBooking() {
         'יום שישי', 
         'יום שבת'
     ];
-    
-    const apiUrl = process.env.REACT_APP_GET_TEACHER_SLOTS!;
     
     // Fetch teacher's available slots
     useEffect(() => {
@@ -82,10 +83,58 @@ function StudentLessonBooking() {
         fetchTeacherSlots();
     }, [student.teacher]);
     
+    async function handleConfirmSubmission (selectedSlot:TimeSlot) {
+        setConfirmSubmission(true);
+        handleCloseConfirmDialog(); // Close the dialog after confirmation
+        const { day, startTime, endTime } = selectedSlot;
+
+        const submissionData = {
+            teacherUsername: student.teacher,
+            studentUsername: student.username,
+            slot: { day, startTime, endTime },
+        };
+
+        const apiUrlAddLesson = process.env.REACT_APP_ADD_LESSON!;
+        console.log("api "+apiUrlAddLesson);
+        console.log(JSON.stringify(submissionData));
+        try {
+          const response = await fetch(apiUrlAddLesson, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData)
+            
+          });
+    
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+    
+          const data = await response.json();
+    
+          console.log('Response from Lambda:', data);
+          if(data.succeeded) {
+            alert("השיעור נקבע בהצלחה");
+            console.log("slots: "+data.slots);
+            setTeacherSlots(data.slots.filter((slot:TimeSlot) => !slot.hasOwnProperty('student')));
+          } else {
+            alert("שגיאה בקביעת השיעור");
+          }            
+    
+        } catch (error) {
+          console.error('Error sending data to Lambda:', error);
+          alert("שגיאה בשליחת הטופס");
+        }
+      };
+      
     // Handle slot selection
     function handleSlotSelect(slot: TimeSlot) {
         setSelectedSlot(slot);
     }
+    const handleCloseConfirmDialog = () => {
+        setOpenConfirmDialog(false);
+      };
 
     return (
         <Card 
@@ -126,7 +175,7 @@ function StudentLessonBooking() {
                                     backgroundColor: 'background.default' 
                                 }}
                             >
-                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                                <Typography variant="subtitle1" sx={{ mb: 2, fontSize:'20px'}}>
                                     {day}
                                 </Typography>
                                 <Grid container spacing={2}>
@@ -134,11 +183,11 @@ function StudentLessonBooking() {
                                         <Grid item xs={4} key={slot.id}>
                                             <Button
                                                 variant={selectedSlot?.id === slot.id ? 'contained' : 'outlined'}
-                                                sx={{backgroundColor:'#009688',        width: '120px', // Set the same width for all buttons
+                                                sx={{backgroundColor:'#009688', width: '120px'
                                                 }}
                                                 onClick={() => handleSlotSelect(slot)}
                                             >
-                                                {`${slot.startTime} - ${slot.endTime}`}
+                                                {`${slot.endTime} - ${slot.startTime}`}
                                             </Button>
                                         </Grid>
                                     ))}
@@ -154,15 +203,14 @@ function StudentLessonBooking() {
                 justifyContent: 'center',
                 borderTop: '1px solid rgba(0,0,0,0.12)' 
             }}>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    disabled={!selectedSlot}
-                    onClick={() => setOpenConfirmDialog(true)}
-                    sx={{backgroundColor:'#009688'}}
-                >
-                    קבע שיעור
-                </Button>
+            <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={() => setOpenConfirmDialog(true)}
+                sx={{backgroundColor:'#009688'}}
+            >
+                קבע שיעור
+            </Button>
             </Box>
             <Dialog
                 open={openConfirmDialog}
@@ -182,12 +230,12 @@ function StudentLessonBooking() {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenConfirmDialog(false)} color="secondary">
+                    <Button onClick={handleCloseConfirmDialog} color="secondary">
                         בטל
                     </Button>
                     <Button 
-                        onClick={() => console.log("Submit booking here")} 
-                        color="primary" 
+                    onClick={() => handleConfirmSubmission(selectedSlot!)}  // Pass selected slot data
+                    color="primary" 
                         autoFocus
                     >
                         אשר
@@ -198,4 +246,3 @@ function StudentLessonBooking() {
     );
 }
 
-export default StudentLessonBooking;
