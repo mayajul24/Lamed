@@ -4,20 +4,17 @@ import { useLocation } from "react-router-dom";
 import background from "./pictures/background3.png";
 import mylogo from "./pictures/mylogo.png";
 import {Avatar,ButtonGroup,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
+import StudentSignUp from "./StudentSignUp";
+import TeacherSignUp from "./TeacherSignUp";
+import CustomButton from "./CustomButton";
 
 export default function SignIn() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showWelcomePage, setShowWelcomePage] = React.useState(false);
+  const [type,setType] = React.useState("");
   
-  
-    const handleLogin = (userType: string) => {
-      if (userType === 'student') {
-        navigate('/student-sign-up', { state: userType });
-      } else {
-        navigate('/teacher-sign-up', { state: userType });
-      }
-    };
+ 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -68,8 +65,9 @@ export default function SignIn() {
   }
 
   return (
-    <>
-    <img src={mylogo} alt="Logo" style={{ height: 50 }} />
+     type!==""?
+      (type==="student"?<StudentSignUp/>:<TeacherSignUp/>):
+      <>
     <Typography
       component="h1"
       variant="h5"
@@ -80,42 +78,16 @@ export default function SignIn() {
     </Typography>
     <Box component="form" onSubmit={handleSubmit} noValidate>
     </Box>
-    
         <div>
-<Button
-        fullWidth
-        variant="contained"
-        sx={{
-          mt: 2,
-          mb: 2,
-          background: "#009688",
-          color: "#fff",
-          fontWeight: 600,
-          padding: "10px 0",
-          borderRadius: 2,
-        }}
-        onClick={() => handleLogin('student')}
+  <CustomButton
+        onClick={() => setType("student")}
       >
         אני תלמיד
-      </Button>
-      
-      <Button
-        fullWidth
-        variant="contained"
-        sx={{
-          mt: 2,
-          mb: 2,
-          background: "#009688",
-          color: "#fff",
-          fontWeight: 600,
-          padding: "10px 0",
-          borderRadius: 2,
-        }}
-        onClick={() => handleLogin('teacher')}
+      </CustomButton> 
+      <CustomButton
+        onClick={() => setType("teacher")}
       >
         אני מורה
-      </Button>
-  </div>
-</>);
-
+      </CustomButton>
+  </div></>);
 }

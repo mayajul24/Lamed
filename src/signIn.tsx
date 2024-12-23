@@ -1,15 +1,21 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import background from "./pictures/background3.png";
 import mylogo from "./pictures/mylogo.png";
 import {Avatar,ButtonGroup,Button,TextField,Link,Grid,Box,Container,Typography} from "@mui/material";
+import CustomTextField from "./CustomTextField";
+import CustomButton from "./CustomButton";
 
 export default function SignIn() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showWelcomePage, setShowWelcomePage] = React.useState(false);
-  
+  const textFieldStyle = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 2,
+      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    }
+  };
   
     const handleLogin = (userType: string) => {
       if (userType === 'student') {
@@ -19,6 +25,7 @@ export default function SignIn() {
       }
     };
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    console.log("Form submission started"); 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
@@ -69,7 +76,7 @@ export default function SignIn() {
 
   return (
     <>
-      <img src={mylogo} alt="Logo" style={{ height: 50 }} />
+      
     <Typography
       component="h1"
       variant="h5"
@@ -79,57 +86,22 @@ export default function SignIn() {
       התחברות
     </Typography>
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <TextField
-        margin="normal"
-        required
-        fullWidth
+      <CustomTextField
         id="username"
         label="שם משתמש"
         name="username"
-        autoFocus
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 2,
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          },
-        }}
       />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
+      <CustomTextField
         name="password"
         label="סיסמה"
         type="password"
         id="password"
-        autoComplete="current-password"
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: 2,
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          },
-        }}
       />
-      <Button
+      <CustomButton
         type="submit"
-        fullWidth
-        variant="contained"
-        sx={{
-          mt: 2,
-          mb: 2,
-          background: "#009688",
-          color: "#fff",
-          fontWeight: 600,
-          padding: "10px 0",
-          borderRadius: 2,
-        }}
-      >
+        >
         כניסה
-      </Button>
-      
-    </Box></>)
+      </CustomButton>
+    </Box>
+    </>)
 }
-
-
-
-

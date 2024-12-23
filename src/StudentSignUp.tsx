@@ -3,9 +3,9 @@ import AWS from 'aws-sdk';
 import {Avatar,Box,Button,Container,TextField,Link,Grid,Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import CustomButton from "./CustomButton";
 import mylogo from './pictures/mylogo.png';
-import carsBackground from './pictures/cars_background2.jpg';
-
+import CustomTextField from './CustomTextField';
 export default function StudentSignUp() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
@@ -102,98 +102,50 @@ export default function StudentSignUp() {
   };
 
   return (
-    <Box
-      sx={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Container
-        component="main"
-        maxWidth="xs"
-        dir="rtl"
-        sx={{
-          backgroundColor: 'white',
-          padding: 4,
-          borderRadius: 4,
-          boxShadow: 3,
-        }}
-      >
-        <img
-          src={mylogo}
-          alt="Logo"
-          style={{
-            marginBottom: '20px',
-            display: 'block',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        />
+        <>
         <Typography sx={{fontSize:"30px"}}component="h1" variant="h5" align="center" gutterBottom>
           הרשמה
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField
-            margin="normal"
-            required
-            fullWidth
+        <Box component="form" onSubmit={handleSubmit} noValidate 
+              sx={{ mt: 1,
+                    maxHeight: '400px',
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column' 
+              }}
+        >
+        <CustomTextField
             id="firstName"
-            placeholder="שם פרטי"
+            label="שם פרטי"
             name="firstName"
-            autoFocus
-            
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             id="lastName"
-            placeholder="שם משפחה"
+            label="שם משפחה"
             name="lastName"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             id="username"
-            placeholder="שם משתמש"
+            label="שם משתמש"
             name="username"
-            autoFocus
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="password"
-            placeholder="סיסמה"
+            label="סיסמה"
             type="password"
             id="password"
-            autoComplete="current-password"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="city"
-            placeholder="עיר בה אתה רוצה ללמוד"
+            label="עיר בה אתה רוצה ללמוד"
             id="city"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="age"
-            placeholder="גיל"
+            label="גיל"
             id="age"
             type="number"
           />
-  
           <Grid container justifyContent="center" sx={{ mt: 2 }}>
             <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {imagePreview ? (
@@ -216,7 +168,6 @@ export default function StudentSignUp() {
               </Button>
             </Grid>
           </Grid>
-  
           <Button
             type="submit"
             fullWidth
@@ -225,28 +176,7 @@ export default function StudentSignUp() {
           >
             הרשמה
           </Button>
-  
-          <Grid container justifyContent="flex-start" sx={{ mt: 2 }}>
-            <Grid item>
-              <Link
-                dir="rtl"
-                href="#"
-                variant="body2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/home-student');
-                }}
-                sx={{ textAlign: 'right' }}  // Align the text of the link to the right
-              >
-                כבר יש לך חשבון? התחבר
-              </Link>
-            </Grid>
-          </Grid>
-
         </Box>
-      </Container>
-    </Box>
+    </>
   );
-  
 }
-

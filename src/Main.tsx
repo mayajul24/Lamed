@@ -11,7 +11,7 @@ export default function Main() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showWelcomePage, setShowWelcomePage] = React.useState(false);
-  
+
   return (
     <Box
     sx={{
@@ -20,7 +20,8 @@ export default function Main() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    position: "relative", // To allow for the background Box to be positioned correctly
+    position: "relative",
+    overflow: "hidden"
   }}
 >
   <Box
@@ -49,7 +50,7 @@ export default function Main() {
       zIndex: 1, 
       position: "relative", 
     }}
-  >
+  ><img src={mylogo} alt="Logo" style={{ height: 50 }} />
     {showWelcomePage ?(<WelcomePage/>) :(<SignIn/>)}
           <Link
             href="#"
@@ -59,7 +60,7 @@ export default function Main() {
             }}
             sx={{ color: "#009688", fontWeight: 500 }}
           >
-              {showWelcomePage ? "יש לך משתמש? התחבר" : "אין לך עדיין משתמש? הירשם"}
+            {showWelcomePage ? "יש לך משתמש? התחבר" : "אין לך עדיין משתמש? הירשם"}
           </Link>
   </Container>
 </Box>

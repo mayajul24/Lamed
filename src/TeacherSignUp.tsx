@@ -1,19 +1,9 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import {Avatar,Button,TextField,Link,Grid,Box,Typography,Container} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import carsBackground from './pictures/cars_background2.jpg';
-import mylogo from './pictures/mylogo.png';
-
-
-
+import CustomTextField from './CustomTextField';
+import CustomButton from "./CustomButton";
 import AWS from 'aws-sdk';
 
 export default function SignUp() {
@@ -111,97 +101,50 @@ export default function SignUp() {
   };
 
   return (
-    <Box
-      sx={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Container
-        component="main"
-        maxWidth="xs"
-        dir="rtl"
-        sx={{
-          backgroundColor: 'white',
-          padding: 4,
-          borderRadius: 4,
-          boxShadow: 3,
-        }}
-      >
-        <img
-          src={mylogo}
-          alt="Logo"
-          style={{
-            marginBottom: '20px',
-            display: 'block',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        />
+    <>
         <Typography component="h1" variant="h5" align="center" gutterBottom>
           הרשמה
         </Typography>
-        <Box component="form" dir="rtl" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+        <Box component="form" dir="rtl" sx={{
+          maxHeight: '400px',  // Set your desired max height
+          overflowY: 'auto',   // Enable vertical scrolling if content overflows
+          display: 'flex',
+          flexDirection: 'column',  // Ensure content is arranged vertically
+        }}
+
+ onSubmit={handleSubmit}>
+          <CustomTextField
             id="firstName"
-            placeholder="שם פרטי"
-            name="firstName"
-            autoFocus
-            
+            label="שם פרטי"
+            name="firstName"            
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             id="lastName"
-            placeholder="שם משפחה"
+            label="שם משפחה"
             name="lastName"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             id="username"
-            placeholder="שם משתמש"
+            label="שם משתמש"
             name="username"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="password"
-            placeholder="סיסמה"
+            label="סיסמה"
             type="password"
             id="password"
-            autoComplete="new-password"
           />
-          <TextField dir="rtl"
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="city"
-            placeholder="עיר בה אתה מלמד"
+            label="עיר בה אתה מלמד"
             id="city"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <CustomTextField
             name="cost"
-            placeholder="מחיר לשעה"
+            label="מחיר לשעה"
             id="cost"
             type="number"
           />
-
           <Grid container justifyContent="center" sx={{ mt: 2 }}>
             <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {imagePreview ? (
@@ -224,7 +167,6 @@ export default function SignUp() {
               </Button>
             </Grid>
           </Grid>
-
           <Button
             type="submit"
             fullWidth
@@ -233,25 +175,7 @@ export default function SignUp() {
           >
             הרשמה
           </Button>
-
-          <Grid container justifyContent="flex-start" sx={{ mt: 2 }}>
-            <Grid item>
-              <Link
-                dir="rtl"
-                href="#"
-                variant="body2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/home-student');
-                }}
-                sx={{ textAlign: 'right' }}  
-              >
-                כבר יש לך חשבון? התחבר
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
-      </Container>
-    </Box>
+    </>
   );
 }
