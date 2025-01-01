@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate,useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import mylogo from './pictures/mylogo.png';
-import carsBackground from './pictures/cars_background2.jpg';
 import SearchIcon from '@mui/icons-material/Search';
-import  { SelectChangeEvent } from '@mui/material/Select';
-import {Select,FormControl,MenuItem,InputLabel,Avatar,Box,Button,Divider,List,ListItem,ListItemAvatar,ListItemText,TextField,Typography,InputAdornment,
-  } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
+import {Select,DialogActions,Dialog,DialogTitle,DialogContent,DialogContentText,FormControl,MenuItem,InputLabel,Avatar,Box,Button,Divider,List,ListItem,ListItemAvatar,ListItemText,TextField,Typography,InputAdornment,Container,
+} from '@mui/material';
 
 function FindTeacher() {
   interface Teacher {
@@ -36,9 +35,15 @@ function FindTeacher() {
   const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
   const [showTeachers, setShowTeachers] = useState(false);
   const [searchVal, setSearchVal] = useState("");
-  const [selected,setSelected] = useState("");
+  const [selected, setSelected] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
 
-  async function getTeachersList  (event: React.MouseEvent<HTMLButtonElement>) {
+  useEffect(()=> {const getTeachersList = async()=>{
     const apiUrl = process.env.REACT_APP_GET_TEACHERS_URL!;
     try {
       const response = await fetch(apiUrl, {
@@ -63,7 +68,11 @@ function FindTeacher() {
     } catch (error) {
       console.error('Error sending data to Lambda:', error);
     }
+  
   };
+getTeachersList();
+ },[]);
+   
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchVal(event.target.value);
@@ -83,10 +92,8 @@ function FindTeacher() {
   }
 
   function handleChange(event: SelectChangeEvent) {
-    console.log("in handle");
     const value = event.target.value;
     setSelected(value);
-    // Perform sorting based on the selected value
     let sortedTeachers = [...teachers];
     if (value === "מהזול ליקר") {
       sortedTeachers.sort((a, b) => a.cost - b.cost);
@@ -95,146 +102,188 @@ function FindTeacher() {
     }
     setFilteredTeachers(sortedTeachers);
   }
-  
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        width: '70vw',
-        height: '90vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        maxHeight: '500vh',
-        backgroundImage: `url(${carsBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        padding: 4,
-      }}
-    >
-    <Box
-      sx={{
-        backgroundColor: 'white', 
-        borderRadius: 4,
-        boxShadow: 3,
-        padding: 4,
-        width: '100%',
-        maxWidth: '600px',
-      }}
-    >
-    <img src={mylogo}></img>
-
-    <Typography variant="h5" fontSize="48px" fontFamily={'Roboto'} textAlign="center" dir="rtl" sx={{ mb: 2 }}>
-      שלום, {student.firstName}
-    </Typography>
-    <Avatar
-      src={student.profilePicture || '/path/to/default/image.jpg'}
-      alt={`${student.firstName} ${student.lastName}`}
-      sx={{ width: 100, height: 100, margin: 'auto', mb: 2 }}
-    />
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={getTeachersList}
-      sx={{ mb: 2, fontSize: '16px', px: 3 }}
-    >
-      מציאת מורה חדש
-    </Button>
-
-    {showTeachers ? (
-      <>
-        <TextField
-          dir="rtl"
-          value={searchVal}
-          onChange={handleInputChange}
-          placeholder="חיפוש מורה"
-          variant="outlined"
-          fullWidth
-          sx={{
-            mb: 2,
-            bgcolor: 'white',
-            borderRadius: 1,
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-          }}
-        />
-    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel dir="rtl" id="demo-simple-select-standard-label">מיין לפי</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={selected}
-          onChange={handleChange}
-        >
-      <MenuItem value="מהזול ליקר">מהזול ליקר</MenuItem>
-      <MenuItem value="מהיקר לזול">מהיקר לזול</MenuItem>
-        </Select>
-  </FormControl>
-  <List
+    <Container sx={{ width:"100vh",height: '100vh', py: 2 }}>
+      <Box
         sx={{
+          height: '90%',
           width: '100%',
-          maxHeight: '500px',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
           bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 1,
+          overflow: 'hidden', 
         }}
       >
-    {filteredTeachers.map((teacher, index) => (
-      <React.Fragment key={index}>
-        <ListItem
-          alignItems="flex-start"
-          onClick={() => teacherClick(teacher)}
-          sx={{ textAlign: 'right', direction: 'rtl' }}
-        >
-          <ListItemAvatar>
-            <Avatar
-              alt={`${teacher.firstName} ${teacher.lastName}`}
-              src={teacher.profilePicture || '/path/to/default/image.jpg'}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="h6" dir="rtl">
-                {teacher.firstName} {teacher.lastName}
-              </Typography>
-            }
-            secondary={
-              <>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  sx={{ color: 'text.primary', display: 'block' }}
-                >
-                  {teacher.city}
-                </Typography>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  sx={{ color: 'text.primary', display: 'block' }}
-                >
-                  {'Cost: ₪' + teacher.cost}
-                </Typography>
-              </>
-            }
+        <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
+          <img 
+            src={mylogo} 
+            alt="Logo" 
+            style={{ 
+              maxWidth: '150px', 
+              display: 'block', 
+              margin: '0 auto 1rem' 
+            }} 
           />
-        </ListItem>
-        <Divider variant="inset" component="li" />
-        </React.Fragment>
-      ))}
-      </List>
-      </>
-    ) : (
-      <Typography textAlign="center" color="text.secondary">
-        אין מורים זמינים
-      </Typography>
-    )}
-    </Box>
-  </Box>
+
+          <Typography 
+            variant="h4" 
+            fontFamily={'Roboto'} 
+            textAlign="center" 
+            dir="rtl" 
+            sx={{ mb: 2 }}
+          >
+            שלום, {student.firstName}
+          </Typography>
+
+          <Avatar
+            src={student.profilePicture || '/path/to/default/image.jpg'}
+            alt={`${student.firstName} ${student.lastName}`}
+            sx={{ 
+              width: 80, 
+              height: 80, 
+              mx: 'auto', 
+              mb: 2 
+            }}
+          />
+        </Box>
+
+        <Box sx={{ flexGrow: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          {showTeachers ? (
+            <>
+              <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <TextField
+                    dir="rtl"
+                    value={searchVal}
+                    onChange={handleInputChange}
+                    placeholder="חיפוש מורה"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  
+                  <FormControl size="small" sx={{ minWidth: 120 }}>
+                    <InputLabel dir="rtl">מיין לפי</InputLabel>
+                    <Select
+                      value={selected}
+                      onChange={handleChange}
+                      label="מיין לפי"
+                    >
+                      <MenuItem value="מהזול ליקר">מהזול ליקר</MenuItem>
+                      <MenuItem value="מהיקר לזול">מהיקר לזול</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Box>
+
+              <List 
+                sx={{ 
+                  flexGrow: 1,
+                  overflow: 'auto',
+                  maxHeight: '100%',
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    backgroundColor: 'background.paper',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#bbb',
+                    borderRadius: '4px',
+                  },
+                }}
+              >
+                {filteredTeachers.map((teacher, index) => (
+                  <React.Fragment key={index}>
+                    <ListItem
+                      alignItems="flex-start"
+                      onClick={() => setOpenConfirmDialog(true)}
+                      sx={{ 
+                        textAlign: 'right', 
+                        direction: 'rtl',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          bgcolor: 'action.hover'
+                        }
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          alt={`${teacher.firstName} ${teacher.lastName}`}
+                          src={teacher.profilePicture || '/path/to/default/image.jpg'}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6" dir="rtl">
+                            {teacher.firstName} {teacher.lastName}
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{ color: 'text.primary', display: 'block' }}
+                            >
+                              {teacher.city}
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{ color: 'text.primary', display: 'block' }}
+                            >
+                              {'מחיר: ₪' + teacher.cost}
+                            </Typography>
+                          </>
+                        }
+                      />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </React.Fragment>
+                ))}
+              </List>
+            </>
+          ) : (
+            <Typography textAlign="center" color="text.secondary" sx={{ p: 3 }}>
+              Loading
+            </Typography>
+          )}
+        </Box>
+        <Dialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)}>
+          <DialogTitle>הגש בקשה</DialogTitle>
+          <DialogContent>
+              <DialogContentText>
+                  האם אתה בטוח שאתה רוצה להיות תלמיד שלו?
+              </DialogContentText>
+                    
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDialog} color="secondary">
+                        לא
+                    </Button>
+                    <Button 
+                    onClick={()=>{}}  
+                    color="primary" 
+                        autoFocus
+                    >
+                        כן
+                    </Button>
+                </DialogActions>
+            </Dialog>
+      </Box>
+    </Container>
   );
 }
+
 export default FindTeacher;

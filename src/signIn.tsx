@@ -54,12 +54,15 @@ export default function SignIn() {
       if (data.succeeded) {
         const user = data.user;
         const userType = user.userType;
+        console.log("user: "+user);
         if (userType === "teacher") {
           const teacher = user;
           navigate("/home-teacher", { state: { teacher } });
         } else {
           const student = user;
-          const hasTeacher = student.teacher != null && student.teacher.length > 0;
+          console.log("teacher: "+student.teacher);
+          const hasTeacher = student.teacher != null;
+          console.log("student: "+student);
           if (hasTeacher) {
             navigate("/home-student", { state: { student } });
           } else {

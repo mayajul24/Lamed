@@ -5,7 +5,7 @@ import './App.css';
 import {BrowserRouter as Router,Routes,Route} from 'react-router-dom';
 import HomeTeacher from './HomeTeacher';
 import FindTeacher from './FindTeacher';
-import TeacherInfo from './TeacherInfo';
+import TeacherInfo from './TeacherRequest';
 import Requests from './Requests';
 import Students from './Students';
 import StudentLessonBooking from './NewLesson';

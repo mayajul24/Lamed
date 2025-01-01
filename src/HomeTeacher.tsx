@@ -14,6 +14,7 @@ import {
 import Requests from './Requests';
 import Students from './Students';
 import TeacherSlots from './TeacherSlots';
+import TeacherLessons from './TeacherLessons';
 
 function HomeTeacher() {
   interface Teacher {
@@ -37,6 +38,8 @@ function HomeTeacher() {
         return <Students teacherUsername={teacher.username} />;
       case 2:
         return <TeacherSlots teacherUsername={teacher.username}/>;
+        case 3:
+          return <TeacherLessons teacherUsername={teacher.username}/>;
       default:
         return null;
     }
@@ -100,6 +103,7 @@ function HomeTeacher() {
             <Tab label="בקשות" sx={{ color: 'white' }} />
             <Tab label="תלמידים" sx={{ color: 'white' }} />
             <Tab label="קביעת זמנים" sx={{ color: 'white' }} />
+            <Tab label="לוח שיעורים" sx={{color:'white'}}/>
           </Tabs>
         </Toolbar>
       </AppBar>
